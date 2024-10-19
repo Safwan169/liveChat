@@ -14,6 +14,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+const PORT = process.env.PORT || 4000;
 
 // MongoDB connection string (replace with your MongoDB URL)
 const uri = `mongodb+srv://${process.env.NEXT_PUBLIC_MONGOUSER}:${process.env.NEXT_PUBLIC_MONGOPASS}@cluster0.lel6e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
