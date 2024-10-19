@@ -90,11 +90,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle user disconnection
-    socket.on('disconnect', () => {
-        console.log(`User disconnected: ${socket.id}`);
-        delete users[socket.id];  // Remove user from the list when they disconnect
-    });
+ 
 });
 
 server.listen(PORT, () => {
