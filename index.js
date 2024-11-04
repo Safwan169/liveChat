@@ -30,16 +30,16 @@ io.on("connection", (socket) => {
     });
 
     // Handle user disconnecting
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-        // Remove the disconnected user's socket ID from the users list
-        for (const [userId, id] of Object.entries(users)) {
-            if (id === socket.id) {
-                delete users[userId];
-                break;
-            }
-        }
-    });
+    // socket.on("disconnect", () => {
+    //     console.log("User disconnected:", socket.id);
+    //     // Remove the disconnected user's socket ID from the users list
+    //     for (const [userId, id] of Object.entries(users)) {
+    //         if (id === socket.id) {
+    //             delete users[userId];
+    //             break;
+    //         }
+    //     }
+    // });
 });
 
 server.listen(3001, () => {
