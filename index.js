@@ -1,47 +1,33 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const PORT = 5000;
 
-// Store connected users in a dictionary with their socket ID
-const users = {};
+// SQLite ডাটাবেস কানেকশন সেটআপ
+const dbPath = 'dua_main.sqlite'; // আপনার ডাটাবেসের পাথ
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+        console.error('ডাটাবেস সংযোগ ব্যর্থ:', err.message);
+    } else {
+        console.log('ডাটাবেস সংযোগ সফল হয়েছে।');
+    }
+});
 
-io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
-
-    // When a user joins, associate their ID (or username) with their socket ID
-    socket.on("join", (userId) => {
-        users[userId] = socket.id; // Store the user's socket ID
-        console.log(`User ${userId} joined with socket ID: ${socket.id}`);
-    });
-
-    // Handle sending a private message
-    socket.on("send_private_message", ({ recipientId, message }) => {
-        const recipientSocketId = users[recipientId];
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit("receive_private_message", {
-                senderId: socket.id,
-                message,
-            });
-        }
-    });
-
-    // Handle user disconnecting
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-        // Remove the disconnected user's socket ID from the users list
-        for (const [userId, id] of Object.entries(users)) {
-            if (id === socket.id) {
-                delete users[userId];
-                break;
-            }
+// API তৈরি: ডেটা ফেচ করার জন্য
+app.get('/api/categories', (req, res) => {
+    const query = 'SELECT * FROM category';
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            console.error('ডেটা ফেচ করার ত্রুটি:', err.message);
+            res.status(500).json({ error: 'ডেটা ফেচ করতে সমস্যা হয়েছে।' });
+        } else {
+            res.status(200).json(rows); // ডেটা JSON ফরম্যাটে পাঠানো হচ্ছে
         }
     });
 });
 
-server.listen(3001, () => {
-    console.log("Socket.IO server running on port 3001");
+// সার্ভার চালু
+app.listen('/', () => {
+    console.log(`Node.js সার্ভার চালু হয়েছে: http://localhost:${PORT}`);
 });
