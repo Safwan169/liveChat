@@ -28,6 +28,10 @@ app.get('/api/categories', (req, res) => {
 });
 
 // সার্ভার চালু
-app.listen('/', () => {
-    console.log(`Node.js সার্ভার চালু হয়েছে: http://localhost:${PORT}`);
-});
+app.get("/", (req, res) => {
+    res.send(`Yeah baby you are connected`);
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
+  });
